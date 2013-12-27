@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project default="Create Jar" name="Create Ant Jar">
+	<target name="Create Jar" description="Create Jar">
+		<jar destfile="lib/swb.jar">
+			<zipfileset dir="bin">
+			</zipfileset>
+		</jar>
+	</target>
+</project>

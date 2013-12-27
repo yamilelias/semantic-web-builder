@@ -1,0 +1,4 @@
+compressing -> compacting
+compression -> compaction
+compressed  -> compacted
+to compress -> to compact
