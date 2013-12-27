@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="SWB" default="clean" basedir=".">
+<project name="SWB" default="deploy" basedir=".">
 	
 	<!-- ********** -->
 	<!-- Properties -->
@@ -24,7 +24,7 @@
 	<!-- Initial tasks -->
 	<!-- ************* -->
 	
-   	<target name="clean" description="">
+   	<target name="clean">
    		<delete dir="${out}" />
    	</target>
    		
