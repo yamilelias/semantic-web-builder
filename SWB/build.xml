@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="SWB" default="clean" basedir=".">
+	
+	<!-- ********** -->
+	<!-- Properties -->
+	<!-- ********** -->
+	
+	<property file="build.properties"/>
+	<property name="in" value="${dir.import}" />
+	<property name="out" value="${dir.export}" />
+	
+	<!-- ************************ -->
+	<!-- Path and task definition -->
+	<!-- ************************ -->
+	
+	<path id="base.path"><fileset dir="lib"><include name="**/*.jar"/></fileset></path>
+		
+	<taskdef name="stxt" classname="org.swb.processor.StxtProcessor" classpathref="base.path" />
+	<taskdef name="sitemap" classname="org.swb.processor.SitemapProcessor" classpathref="base.path" />
+	<taskdef name="index" classname="org.swb.processor.IndexProcessor" classpathref="base.path" />
+	
+	<!-- ************* -->
+	<!-- Initial tasks -->
+	<!-- ************* -->
+	
+   	<target name="clean" description="">
+   		<delete dir="${out}" />
+   	</target>
+   		
+	<target name="prepare">
+		<mkdir dir="${out}/es/book" />
+		<mkdir dir="${out}/en/book" />
+	</target>
+	
+   	<!-- ****************************** -->
+   	<!-- Main DEPLOY of the application -->
+   	<!-- ****************************** -->
+
+	<target name="deploy" depends="prepare" description="">
+		<!-- Generate index -->
+		<index
+			dir="${in}/book_en"
+			templatefile="${in}/book_en/chapter_00_c.stxt"
+			outfile="${in}/book_en/chapter_00_c.stxt"
+		/>
+		
+		<index
+			dir="${in}/book_es"
+			templatefile="${in}/book_es/chapter_00_c.stxt"
+			outfile="${in}/book_es/chapter_00_c.stxt"
+		/>
+		
+		<!-- Copy css -->
+		<copy todir="${out}/css">
+			<fileset dir="${in}/css" />
+		</copy>
+		
+		<!-- Copy definitions -->
+		<copy todir="${out}">
+			<fileset dir="defs/www.stxt.info" />
+		</copy>
+		
+		<!-- Render pages -->
+		<stxt 
+			dir="${in}/pages_es" 
+			todir="${out}/es"
+			template="templates/page.vm"
+			propskey="lang"
+			propsfile="${in}/lang/pages_es.properties" />
+		
+		<stxt 
+			dir="${in}/pages_en" 
+			todir="${out}/en"
+			template="templates/page.vm"
+			propskey="lang"
+			propsfile="${in}/lang/pages_en.properties" />
+		
+		<!-- Render book chapters -->
+		<stxt 
+			dir="${in}/book_es" 
+			todir="${out}/es/book"
+			template="templates/page.vm"
+			propskey="lang"
+			propsfile="${in}/lang/pages_es.properties" />
+		
+		<stxt 
+			dir="${in}/book_en" 
+			todir="${out}/en/book"
+			template="templates/page.vm"
+			propskey="lang"
+			propsfile="${in}/lang/pages_en.properties" />
+		
+		<!-- Copy source stxt's -->
+		<copy todir="${out}/es">
+			<fileset dir="${in}/pages_es" />
+		</copy>
+	
+		<copy todir="${out}/en">
+			<fileset dir="${in}/pages_en" />
+		</copy>
+		
+		<copy todir="${out}/es/book">
+			<fileset dir="${in}/book_es" />
+		</copy>
+		
+		<copy todir="${out}/en/book">
+			<fileset dir="${in}/book_en" />
+		</copy>
+		
+		<!-- Generate sitemap -->
+		<sitemap
+			dirs="${in}/pages_es,${in}/book_es,${in}/pages_en,${in}/book_en"
+			webdirs="/es,/es/book,/en,/en/book"
+			outfile="${out}/sitemap.xml"
+			urlprefix="http://www.stxt.info"
+		/>
+		
+		<!-- Copy simple pages -->
+		<copy file="${in}/favicon.ico" todir="${out}" />
+		<copy file="${in}/robots.txt" todir="${out}" />
+		
+		<!-- TODO: FTP to remote server -->
+		<!-- TODO: Other files... -->
+	</target>
+	
+</project>
