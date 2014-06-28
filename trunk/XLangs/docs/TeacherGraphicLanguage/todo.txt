@@ -1,0 +1,22 @@
+- Lenguaje que permitirá mostrar como se ha hecho la composición o dibujo
+- Será vectorial, cualquier dibujo podrá ampliarse o reducirse sin perder resolución
+- Deberá ser muy fácil de usar, pero permitirá tanto el trabajo sencillo como el de más calidad o precisión
+- Permitirá dibujo con capas
+- Permitirá operaciones geométricas (intersección de rectas, distancia de punto a recta,...)
+- Los resultados gráficos serán parecidos a lo que hacen los profesores en la pizarra.
+- Se escojerá el tipo de pincel (de hecho será como una tiza), el color, y el trazado (puntos, linea-punto,...)
+
+
+- Hacer comandos
+	D(100,100):
+		/Draw/@x = 100
+		@y=100
+	
+(): Punto global
+[]: Punto local
+{}: Último punto local
+
+- Hacer comando: RECORD nombre
+				 STOP_RECORD nombre
+				 
+				 EXEC nombre

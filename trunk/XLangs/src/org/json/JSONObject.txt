@@ -1,0 +1,3 @@
+Nota: Se ha cambiado la clase original para mantener el orden de inserción de los
+parámetros. Para ello es necesario cambiar de JSONObject java.util.Hashmap por
+java.util.LinkedHashMap.

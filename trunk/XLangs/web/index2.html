@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Página de pruebas</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+<script type="text/javascript" src="index2.js"></script>
+</head>
+<body>
+
+<div id="form1">
+	<b>TGL</b><br/>
+	<textarea rows="15" cols="75" id="tgl_text">// Init params
+Set width 200*2
+Set height 300
+
+// Create canvas
+Canvas width,height DL
+
+// Make draw
+Goto 100,20
+Rotate 30
+Line (0,0) (0,height-25)
+
+Goto (100,20)
+Line (0,0) (10,0)
+</textarea><br/>
+	<button id="btn_tgl">TGL->SVG</button><br/><br/>
+</div>
+
+<div id="svg_canvas">
+</div>
+
+</body>
+</html>

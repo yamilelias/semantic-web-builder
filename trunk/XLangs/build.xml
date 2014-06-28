@@ -1,0 +1,407 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<project name="XLangs" default="clean all" basedir=".">
+	
+	<!-- ********************** -->
+	<!-- Configuració aplicació -->
+	<!-- ********************** -->
+	
+	<property file="build.properties"/>
+	<property name="src" value="${dir.src}" />
+	<property name="web" value="${dir.web}" />
+	<property name="build" value="${dir.build}" />
+	<property name="build-tmp" value="${build}/tmp" />
+	<property name="build-web" value="${build}/web" />
+	<property name="build-webinf" value="${build-web}/WEB-INF" />
+	<property name="build-classes" value="${build-webinf}/classes" />
+	<property name="build-lib" value="${build-webinf}/lib" />
+	<property name="war.file" value="${app.context}.war" />
+	<property name="app" value="${app.name}" />
+	<property name="war.dir_cp" value="${dir.copy.local}/${app.context}${war.copy.extension}" />
+	
+	<!-- ************************* -->
+	<!-- Tasques de Inicialització -->
+	<!-- ************************* -->
+	
+	<target name="init">
+		<available property="filterfile" file="filter-${server}.txt" />
+		<available property="stdfilterfile" file="filter.txt" />
+		<tstamp><format property="x" pattern="yyyyMMdd" /></tstamp>
+		<tstamp><format property="xx" pattern="yyyy-MM-dd HH:mm:ss" /></tstamp>
+	</target>
+	
+	<target name="clean all" description="">
+		<taskdef name="clean" classname="es.fiatc.ant.task.Clean" classpath="./fiatc-ant.jar" />
+		<clean dir="${src}"/>
+		<clean dir="${web}"/>
+		<delete dir="${build}" />
+	</target>
+	
+	<!-- **************** -->
+	<!-- RENAME TEMPORALS -->
+	<!-- **************** -->
+	
+	<target name="rename temp">
+		<copy todir="${web}" overwrite="true">
+			<fileset dir="${web}">
+				<include name="**/*__tmp.*"></include>
+			</fileset>
+			<mapper type="regexp" from="^(.*)__tmp\.(.*)$$" to="\1\.\2"/>
+		</copy>
+		<copy todir="${src}" overwrite="true">
+			<fileset dir="${src}">
+				<include name="**/*__tmp.*"></include>
+			</fileset>
+			<mapper type="regexp" from="^(.*)__tmp\.(.*)$$" to="\1\.\2"/>
+		</copy>
+		<delete>
+			<fileset dir="${web}">
+				<include name="**/*__tmp.*"></include>
+			</fileset>
+		</delete>
+		<delete>
+			<fileset dir="${src}">
+				<include name="**/*__tmp.*"></include>
+			</fileset>
+		</delete>
+	</target>
+	
+	<!-- ******* -->
+	<!-- FILTERS -->
+	<!-- ******* -->
+	
+    <target name="filter" depends="filterfile, stdfilterfile" />
+	
+	<target name="filterfile" depends="init" if="filterfile">
+		<replace dir="${src}" replacefilterfile="filter-${server}.txt">
+			<include name="**/*__tmp.*" />
+		</replace>
+		<replace dir="${web}" replacefilterfile="filter-${server}.txt">
+			<include name="**/*__tmp.*" />
+		</replace>
+	</target>
+
+	<target name="stdfilterfile" depends="init" if="stdfilterfile">
+		<replace dir="${src}" replacefilterfile="filter.txt">
+			<include name="**/*__tmp.*" />
+		</replace>
+		<replace dir="${web}" replacefilterfile="filter.txt">
+			<include name="**/*__tmp.*" />
+		</replace>
+	</target>
+	
+	<!-- ************ -->
+	<!-- MAPING FILES -->
+	<!-- ************ -->
+	
+	<target name="mapping_server_web" depends="init">
+		<copy todir="${web}" overwrite="true">
+			<fileset dir="${web}">
+				<include name="**/*__${server}.*"></include>
+			</fileset>
+			<mapper type="regexp" from="^(.*)__${server}\.(.*)$$" to="\1__tmp\.\2"/>
+		</copy>
+	</target>	
+
+	<target name="mapping_default_web" depends="init">
+		<copy todir="${web}" overwrite="true">
+			<fileset dir="${web}">
+				<include name="**/*__.*"></include>
+			</fileset>
+			<mapper type="regexp" from="^(.*)__\.(.*)$$" to="\1__tmp\.\2"/>
+		</copy>
+	</target>	
+			
+	<target name="mapping_server_src" depends="init">
+		<copy todir="${src}" overwrite="true">
+			<fileset dir="${src}">
+				<include name="**/*__${server}.*"></include>
+			</fileset>
+			<mapper type="regexp" from="^(.*)__${server}\.(.*)$$" to="\1__tmp\.\2"/>
+		</copy>
+	</target>	
+
+	<target name="mapping_default_src" depends="init">
+		<copy todir="${src}" overwrite="true">
+			<fileset dir="${src}">
+				<include name="**/*__.*"></include>
+			</fileset>
+			<mapper type="regexp" from="^(.*)__\.(.*)$$" to="\1__tmp\.\2"/>
+		</copy>
+	</target>	
+			
+	<!-- ****** -->
+	<!-- BUILDS -->
+	<!-- ****** -->
+	
+    <target name="build ws server">
+		<antcall target="mapping_default_src" />
+		<antcall target="mapping_default_web" />
+		<antcall target="mapping_server_src" />
+		<antcall target="mapping_server_web" />
+    	<antcall target="filter" />
+    	<antcall target="rename temp" />
+    </target>
+
+	<target name="build ws " description="" depends="init">
+		<antcall target="mapping_default_src" />
+		<antcall target="mapping_default_web" />
+    	<antcall target="filter" />
+       	<antcall target="rename temp" />
+	</target>
+			
+	<target name="build ws local" description="">
+		<property name="server" value="local" />
+		<antcall target="build ws server" />
+	</target>
+	
+	<target name="build ws test" description="">
+		<property name="server" value="test" />
+		<antcall target="build ws server" />
+	</target>
+			
+	<target name="build ws pre" description="">
+		<property name="server" value="pre" />
+		<antcall target="build ws server" />
+	</target>
+	
+	<target name="build ws prod" description="">
+		<property name="server" value="prod" />
+		<antcall target="build ws server" />
+	</target>
+			
+	<!-- **** -->
+	<!-- HELP -->
+	<!-- **** -->
+	
+	<target name="help">
+		<echo>
+			Los ficheros *__.*, *__local.*, *__test.*,  *__pre.*, *__prod.*
+			que se encuentren en los directorios ${dir.src} y ${dir.web}
+			se copian sin extensión y aplicando filtros
+			
+			Ficheros *__.*        --> Copiar por defecto (Antes que local, test y prod)
+			Ficheros *__local.*   --> Copiar sólo si local
+			Ficheros *__test.*    --> Copiar sólo si test
+			Ficheros *__pre.*     --> Copiar sólo si pre
+			Ficheros *__prod.*    --> Copiar sólo si prod
+		</echo>
+	</target>
+
+	<!-- ********** -->
+	<!-- CREATE EAR -->
+	<!-- ********** -->
+
+	<target name="copy ear local" description="">
+		<property name="server" value="local" />
+		<antcall target="init" />
+		<antcall target="ear" />
+		<tstamp><format property="x" pattern="yyyyMMdd" /></tstamp>
+		<copy file="${build-tmp}/${app}.ear" tofile="${dir.copy.local}/${app}.ear"/>
+	</target>
+	
+	<target name="copy ear test" description="">
+		<property name="server" value="test" />
+		<antcall target="init" />
+		<antcall target="ear" />
+		<tstamp><format property="x" pattern="yyyyMMdd" /></tstamp>
+		<copy file="${build-tmp}/${app}.ear" tofile="${dir.copy.test}/${app}-${x}-test.ear"/>
+	</target>
+
+	<target name="copy ear prod" description="">
+		<property name="server" value="prod" />
+		<antcall target="init" />
+		<antcall target="ear" />
+		<tstamp><format property="x" pattern="yyyyMMdd" /></tstamp>
+		<copy file="${build-tmp}/${app}.ear" tofile="${dir.copy.prod}/${app}-${x}-prod.ear"/>
+	</target>
+
+	<target name="copy ear pre" description="">
+		<property name="server" value="pre" />
+		<antcall target="init" />
+		<antcall target="ear" />
+		<tstamp><format property="x" pattern="yyyyMMdd" /></tstamp>
+		<copy file="${build-tmp}/${app}.ear" tofile="${dir.copy.pre}/${app}-${x}-pre.ear"/>
+	</target>
+		
+	<target name="war" depends="build">
+		<move file="${build-webinf}/web.xml" todir="${build-tmp}" />
+		<antcall target="createDeployJsp" />
+		<war warfile="${build-tmp}/${war.file}" webxml="${build-tmp}/web.xml">
+			<fileset dir="${build-web}" />
+		</war>
+	</target>
+	
+	<target name="ear" depends="war">
+		<ear destfile="${build-tmp}/${app}.ear" 
+			appxml="${build-tmp}/application.xml">
+			<fileset dir="${build-tmp}">
+				<include name="${war.file}" />
+			</fileset>
+		</ear>
+	</target>
+
+	<target name="prepare" depends="init">
+		<mkdir dir="${build}" />
+		<mkdir dir="${build-tmp}" />
+		<mkdir dir="${build-web}" />
+		<mkdir dir="${build-classes}" />
+	</target>
+	
+	<target name="build" depends="prepare">
+		<antcall target="createApplicationXML" />
+		<antcall target="copybin" />
+		<antcall target="copyweb" />
+		
+		<taskdef name="clean" classname="es.fiatc.ant.task.Clean" classpath="./fiatc-ant.jar" />
+		<clean dir="${build-web}"/>
+		
+		<antcall target="mapping build" />
+		<antcall target="filter build" />
+		<antcall target="delete build" />
+	</target>
+	
+	<target name="createApplicationXML" depends="prepare">
+		<echo file="${build-tmp}/application.xml"><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE application 
+PUBLIC "-//Sun Microsystems, Inc.//DTD J2EE Application 1.2//EN" 
+"http://java.sun.com/j2ee/dtds/application_1_2.dtd">
+
+<application>
+	<display-name>]]>${app}<![CDATA[</display-name>
+	<description>]]>${app.description}<![CDATA[</description>
+	<module>
+		<web>
+			<web-uri>]]>${war.file}<![CDATA[</web-uri>
+			<context-root>]]>/${app.context}<![CDATA[</context-root>
+		</web>
+	</module>
+</application>]]>		
+		</echo>
+	</target>
+
+	<target name="createDeployJsp" depends="prepare">
+		<echo file="${build-tmp}/deploy.jsp"><![CDATA[
+<%! private int num = 0; %>
+<%! private String timeComp = (new java.util.Date()).toString(); %>
+
+<%
+	response.setHeader("Cache-Control", "no-cache");
+	response.setHeader("Pragma", "no-cache");
+%>
+<html>
+<head><title>DEPLOY ${app.version}</title></head>
+<body>
+	<B>${server}</B><BR>
+	<B>VERSION: </B>${app.version}<BR>
+	<B>TIME COMPILATION: </B>${xx}<BR>
+	<B>TIME INIT APP: </B><%= timeComp%><BR>
+	<B>TIME NOW: </B><%= (new java.util.Date()).toString() %><BR>
+	<B>EXEC: </B><%= num++ %><BR>
+	<B>Server:</B><%=request.getServerName() %><BR>
+	<B>Encoding:</B><%=System.getProperties().getProperty("file.encoding") %><BR>
+</body>
+</html>
+]]>
+			
+		</echo>
+		
+		<copy todir="${build-web}" overwrite="true">
+			<fileset file="${build-tmp}/deploy.jsp" />
+		</copy>
+	</target>
+	
+	
+	<target name="copybin" depends="prepare">
+		<copy todir="${build-classes}" >
+			<fileset dir="${dir.class}" />
+		</copy>
+	</target>
+	
+	<target name="copyweb" depends="prepare">
+		<copy todir="${build-web}">
+			<fileset dir="${web}" />
+		</copy>
+	</target>
+
+	<!-- ************ -->
+	<!-- MAPING FILES -->
+	<!-- ************ -->
+	
+	<target name="mapping build" depends="init">
+		<copy todir="${build-web}" overwrite="true">
+			<fileset dir="${build-web}">
+				<include name="**/*__.*"></include>
+			</fileset>
+			<mapper type="regexp" from="^(.*)__\.(.*)$$" to="\1__tmp\.\2"/>
+		</copy>
+		<copy todir="${build-web}" overwrite="true">
+			<fileset dir="${build-web}">
+				<include name="**/*__${server}.*"></include>
+			</fileset>
+			<mapper type="regexp" from="^(.*)__${server}\.(.*)$$" to="\1__tmp\.\2"/>
+		</copy>
+	</target>	
+
+	<target name="delete build" depends="init">
+		<copy todir="${build-web}" overwrite="true">
+			<fileset dir="${build-web}">
+				<include name="**/*__tmp.*"></include>
+			</fileset>
+			<mapper type="regexp" from="^(.*)__tmp\.(.*)$$" to="\1\.\2"/>
+		</copy>
+		<delete>
+			<fileset dir="${build-web}">
+				<include name="**/*__.*"></include>
+				<include name="**/*__tmp.*"></include>
+				<include name="**/*__local.*"></include>
+				<include name="**/*__test.*"></include>
+				<include name="**/*__pre.*"></include>
+				<include name="**/*__prod.*"></include>
+			</fileset>
+		</delete>
+	</target>	
+	
+    <target name="filter build" depends="filterfile build, stdfilterfile build" />
+	
+	<target name="filterfile build" depends="init" if="filterfile">
+		<replace dir="${build-web}" replacefilterfile="filter-${server}.txt">
+			<include name="**/*__tmp.*" />
+		</replace>
+	</target>
+
+	<target name="stdfilterfile build" depends="init" if="stdfilterfile">
+		<replace dir="${build-web}" replacefilterfile="filter.txt">
+			<include name="**/*__tmp.*"></include>
+		</replace>
+	</target>
+
+	<!-- ************* -->
+	<!-- Local Targets -->
+	<!-- ************* -->
+	
+	<target name="copy files local" description="">
+		<property name="server" value="local" />
+		<antcall target="build"></antcall>	
+		<mkdir dir="${war.dir_cp}" />
+		<copy todir="${war.dir_cp}">
+			<fileset dir="${build-web}" />
+		</copy>
+	</target>
+	
+	<target name="delete local" description="Uninstall an aplication form JBoss">
+		<property name="server" value="local" />
+		<delete file="${dir.copy.local}/${app}.ear" />
+		<delete dir="${war.dir_cp}" />
+		<delete file="${dir.copy.local}/${war.file}" />
+	</target>
+		
+	<target name="copy war local" description="">
+		<property name="server" value="local" />
+		<antcall target="init" />
+		<antcall target="war" />
+		<copy file="${build-tmp}/${war.file}" tofile="${dir.copy.local}/${war.file}"/>
+	</target>
+	
+</project>
