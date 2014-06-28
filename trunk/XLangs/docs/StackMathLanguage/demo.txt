@@ -1,8 +1,0 @@
-Tasques Microinf
-Webapps Portal Fiatc: Hacer llamadas a xwm con texto (usar templates, etc..):
-<span class="xwm-exec" data-xwm="fsafasa@fsafas:demo">{table:"Demo"}</span>
-Este es otro texto!!!!
-<div class="xwm-exec" data-xwm="fsafasa@fsafas:demo">{table:"Demo"}</div>
-Vamos a ver!!!!!
-Deloitte:
-Proceso inserción de tablas a partir de fichero de texto
