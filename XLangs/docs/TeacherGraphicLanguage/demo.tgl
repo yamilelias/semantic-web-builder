@@ -1,0 +1,13 @@
+graphic(ns):
+width:100
+height:200
+
+draw:
+	Goto: 10,0
+	Rotate: 30
+	Line:1,10
+	 
+	Fast: G10,0 L1,10  r30deg
+	
+	
+	
