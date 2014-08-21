@@ -4,7 +4,7 @@
 #      to allow simple parsers and future alias addition
 #   
 #   For examples and description:
-#   http://www.stxt.info/en/book/chapter_04.html
+#   http://www.semantictext.info/en/book/chapter_04.html
 #              
 # 	ns_def (namespace definition,namespace_definition):
 #		n_def (node definition, node def, node_def):

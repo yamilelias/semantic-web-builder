@@ -1,4 +1,4 @@
-Chapter(www.stxt.info/book.stxt):
+Chapter(www.semantictext.info/book.stxt):
 
 Metadata:
 	Title: Capítulo 4: Creación y uso de gramáticas
@@ -436,7 +436,7 @@ text:
 	Ejemplos válidos:
 	
 	* https://www.xxx.demo/doc.stxt
-	* http://www.stxt.info
+	* http://www.semantictext.info
 	* ...
 	
 h1:
