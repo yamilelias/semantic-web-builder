@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="SWB" default="deploy" basedir=".">
+<project name="SWB" default="clean" basedir=".">
 	
 	<!-- ********** -->
 	<!-- Properties -->
@@ -24,7 +24,7 @@
 	<!-- Initial tasks -->
 	<!-- ************* -->
 	
-   	<target name="clean">
+   	<target name="clean" description="">
    		<delete dir="${out}" />
    	</target>
    		
@@ -58,7 +58,7 @@
 		
 		<!-- Copy definitions -->
 		<copy todir="${out}">
-			<fileset dir="defs/www.stxt.info" />
+			<fileset dir="defs/www.semantictext.info" />
 		</copy>
 		
 		<!-- Render pages -->
@@ -113,7 +113,7 @@
 			dirs="${in}/pages_es,${in}/book_es,${in}/pages_en,${in}/book_en"
 			webdirs="/es,/es/book,/en,/en/book"
 			outfile="${out}/sitemap.xml"
-			urlprefix="http://www.stxt.info"
+			urlprefix="http://www.semantictext.info"
 		/>
 		
 		<!-- Copy simple pages -->

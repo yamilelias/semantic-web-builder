@@ -14,7 +14,7 @@ Node Definition:
 	Child:
 		Node: metadata
 		Num: 1
-		Namespace: www.stxt.info/page.stxt
+		Namespace: www.semantictext.info/page.stxt
 	Child:
 		Node:preamble
 		Num:?

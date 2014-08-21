@@ -1,4 +1,4 @@
-This project is the "source code" of the portal: http://www.stxt.info
+This project is the "source code" of the portal: http://www.semantictext.info
 You can use it to build your own portal or make your templates.
 
 Use as you like (respecting the licence, of course).

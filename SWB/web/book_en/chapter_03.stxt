@@ -1,4 +1,4 @@
-Chapter(www.stxt.info/book.stxt):
+Chapter(www.semantictext.info/book.stxt):
 
 Metadata:
 	Title: Chapter 3: STxT, Tutorial
@@ -188,7 +188,8 @@ text:
 	the other namespaces are deduced automatically from its definition.//
 
 assert:	
-	Incredible! Finally a bit of coherence and user friendliness in the ns! :-)
+	Incredible! \\
+	Finally a bit of coherence and user friendliness in the ns! :-)
 
 code:
 	Recipe(www.cooking.demo/recipe.stxt):
@@ -233,8 +234,8 @@ text:
 	It is everything. If you understand this, that’s it. You will know STxT.
 	
 alert:
-	Please do not go on. Read this section at least once again.
-	After that, go on.
+	Please do not go on. Read this section at least once again.\\
+	After that, go on.\\
 	Or better: rest, read it again, and move on to the next section :-) 
 	
 h1:
